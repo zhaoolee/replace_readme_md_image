@@ -1,0 +1,24 @@
+{
+  "name": "replace_readme_md_image",
+  "version": "1.0.0",
+  "description": "将README.md中的图片替换为github地址的图片",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaoolee/replace_readme_md_image.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhaoolee/replace_readme_md_image/issues"
+  },
+  "homepage": "https://github.com/zhaoolee/replace_readme_md_image#readme",
+  "dependencies": {
+    "fs-extra": "^9.0.1",
+    "request": "^2.88.2"
+  }
+}
