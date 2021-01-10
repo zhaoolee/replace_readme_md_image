@@ -1,15 +1,12 @@
-# replace_readme_md_image
-将README.md中的图片替换为github地址的图片
+# 将README.md中的图片替换为github地址的图片
 
+本项目永久更新地址
 
+[https://github.com/zhaoolee/replace_readme_md_image](https://github.com/zhaoolee/replace_readme_md_image)
 
 ##  痛点: Github的README.md展示图片效果并不完美
 
-
-
 为了让项目演示更生动形象, 我们可以往README.md中插入一些图片
-
-
 
 但Github会对README.md中的站外图片会进行地址转换,如果图片尺寸很小,这种转换完全没有问题, 但如果图片尺寸稍大, github的只能转换出半张图, 图片展示的效果极差
 
@@ -23,13 +20,9 @@
 
 
 
-## 转换后的图片
+## 被github转换后的图片
 
 ![image-20210110174523700](https://raw.githubusercontent.com/zhaoolee/replace_readme_md_image/master/README/1610273620453w1B3jNPE.png)
-
-
-
-
 
 ## 如何解决README.md中大图展示不完美的问题?
 
@@ -53,7 +46,309 @@ https://raw.githubusercontent.com/zhaoolee/EasyTypora/master/README/161021277652
 
 ## 但是手工替换所有的图片太累了, 于是我写了一个自动化的程序
 
+- 程序支持转换网络图片为github路径
+- 程序支持转换本地路径图片为github路径
+- 程序自动读取仓库下的`.git/config`,获取用户名和仓库名称
+- 自动判断前缀, 对于已经转换的图片, 重复运行程序无需重新爬取,节约流量!
+
+```node.js
+const request = require("request");
+const fs = require("fs-extra");
+const path = require("path");
+
+// 读取用户输入
+async function readline_sync() {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    })
+    return new Promise((resolve, reject) => {
+        readline.question(``, data => {
+            readline.close();
+            resolve(data)
+        })
+    });
+}
+
+async function get_github_username_repositories_name() {
+
+    // 查看.git文件夹是否存在
+
+    let exist = fs.existsSync(path.join(__dirname, ".git", "config"));
+
+    // 如果.git存在则读取username和repositories_name
+
+    let username = "";
+
+    let repositories_name = "";
+
+    let url = "";
+
+    if (exist) {
+        let config_content = String(fs.readFileSync(path.join(__dirname, ".git", "config")))
+
+        let re_n_t = /\n|\t/;
+        let config_content_list = config_content.split(re_n_t)
+
+        for (let i = 0, config_content_list_length = config_content_list.length; i < config_content_list_length; i++) {
+
+            if (config_content_list[i].indexOf("url") === 0) {
+
+                url = config_content_list[i].split("url = ")[1];
 
 
+
+                url = url.split(".git")[0]
+
+                let url_info = url.split("/");
+                // console.log(url_info);
+                url_info.reverse();
+                username = url_info[1];
+                repositories_name = url_info[0];
+
+            }
+        }
+
+
+    }
+
+
+
+
+
+
+
+    // 如果.git不存在则要求输入username和repositories_name
+
+    if (exist === false) {
+        console.log("请输入github用户名：");
+        username = await readline_sync();
+
+        console.log("请输入仓库名：");
+        repositories_name = await readline_sync();
+    }
+
+    console.log(username, repositories_name);
+
+    return new Promise((resolve, reject) => {
+        resolve({ username: username, repositories_name: repositories_name })
+    })
+
+
+
+}
+
+
+function get_img_url_list_in_md(md_path) {
+    const md_content = String(fs.readFileSync(md_path));
+
+    re_md_img = /\!\[(.*)\]\((.*)\)/g;
+
+    
+
+    let md_img_list = md_content.match(re_md_img);
+
+    console.log(md_img_list);
+
+    let img_url_list = [];
+
+    for (let i = 0, md_img_list_length = md_img_list.length; i < md_img_list_length; i++) {
+
+        img_url = md_img_list[i].match(/(.*)\((.*)\)/)[2];
+
+        img_url_list.push(img_url);
+    }
+
+
+
+    return img_url_list;
+
+
+}
+
+// 创建随机数函数
+//  随机产生字符串
+function randomString(e) {
+    e = e || 32;
+    var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz012345678",
+        a = t.length,
+        n = "";
+    for (i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
+
+function download_img_to_readme_dir(img_url, pre_image_url){
+
+    let new_img_url = "";
+
+    return new Promise((resolve, reject)=>{
+
+
+        // 如果以http开头,则进行下载
+        if(img_url.indexOf("http") === 0){
+            try {
+                let img_url_info = img_url.split(".")
+                img_url_info.reverse();
+                let ext = img_url_info[0];
+                let new_img_name = Date.now() + randomString(8) + "." + ext;
+                request.get(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+                    new_img_url = pre_image_url + new_img_name;
+    
+                    resolve(new_img_url);
+                });
+                
+    
+                
+        
+            }catch(e){
+    
+                console.log(e);
+                
+                new_img_url = img_url;
+    
+                resolve(new_img_url);
+            }
+
+        }
+        // 如果不以http开头,则是本地图片,进行拷贝即可
+        else {
+
+            let img_url_info = img_url.split(".")
+            img_url_info.reverse();
+            let ext = img_url_info[0];
+            let new_img_name = Date.now() + randomString(8) + "." + ext;
+            fs.createReadStream(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+                new_img_url = pre_image_url + new_img_name;
+                resolve(new_img_url);
+            });
+
+
+
+        }
+
+ 
+
+
+
+
+    })
+
+
+
+
+
+}
+
+function replace_readme_info ( src_text, dest_text) {
+
+    // 获取README.md原始信息
+
+
+    let readme_content = String(fs.readFileSync(path.join(__dirname, "README.md")));
+
+    let  new_readme_content = readme_content.replace(src_text, dest_text);
+
+    fs.writeFileSync(path.join(__dirname, "README.md"), new_readme_content);
+
+
+}
+
+
+
+async function main() {
+
+    // 获取仓库的用户名和仓库名
+
+    let { username, repositories_name } = await get_github_username_repositories_name();
+    // console.log(username_repositories_name);
+    // username = username_repositories_name.username;
+    // repositories_name = username_repositories_name.repositories_name;
+
+    console.log(username, repositories_name);
+
+    // 备份README.md为README_BEFORE.md
+
+    fs.copyFileSync(path.join(__dirname, "README.md"), path.join(__dirname, "README_BEFORE.md"))
+
+    // 拼接README图片前缀
+
+    let pre_image_url = "https://raw.githubusercontent.com/" + username + "/" + repositories_name + "/master/README/"
+
+    // 获取README.md里面的所有图片地址列表
+
+    let img_url_list = get_img_url_list_in_md(path.join(__dirname, "README.md"));
+
+    // 如果README文件夹不存在，则创建README文件夹
+    if ((fs.existsSync(path.join(__dirname, "README"))) === false) {
+        fs.mkdirSync(path.join(__dirname, "README"))
+    }
+
+    for (let i = 0, img_url_list_length = img_url_list.length; i < img_url_list_length; i++) {
+
+        // 如果图片以pre_image_url开头，则跳过
+        if (img_url_list[i].indexOf(pre_image_url) === -1) {
+
+
+            // 将图片下载到README文件夹，并生成图片github地址
+            let new_img_url = await download_img_to_readme_dir(img_url_list[i], pre_image_url);
+            // 替换README.md内图片地址为github地址
+            replace_readme_info(img_url_list[i], new_img_url);
+
+            console.log("将==》",img_url_list[i] ,"替换为==》",new_img_url);
+
+
+        }
+
+
+
+    }
+
+}
+
+main();
+```
+
+## 如何使用本项目
+
+
+#### 如果是node.js项目
+
+
+1. 将本项目根目录下main.js放入目标项目根目录,运行即可(如果报错依赖包缺失,记得npm i request fs-extra -D 补包)
+
+
+2. main.js程序运行完成后, 运行 
+
+```shell
+git add README
+git commit -m "新增README图片"
+git push
+```
+
+
+#### 如果是非node.js项目
+
+1. 下载本项目,并安装依赖包
+
+```
+git clone https://github.com/zhaoolee/replace_readme_md_image.git
+cd replace_readme_md_image
+npm i
+```
+
+2. 删除本项目下的 REAEME.md 文件和README文件夹和.git文件夹
+
+3. 将需要转换的README.md文案件和.git文件夹放入项目根目录, 如果REAMD.md中含本地相对路径的图片文件, 请手动调整路径
+
+4. 运行`npm start`, 生成新的README.md文件和README文件夹
+
+
+5. 将README.md文件和README文件夹放入原项目中, 原项目运行 
+
+```shell
+git add README
+git commit -m "新增README图片"
+git push
+```
 
 
