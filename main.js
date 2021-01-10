@@ -88,15 +88,19 @@ async function get_github_username_repositories_name() {
 function get_img_url_list_in_md(md_path) {
     const md_content = String(fs.readFileSync(md_path));
 
-    re_md_img = /\!\[(.*)\]\((.*)\)/g
+    re_md_img = /\!\[(.*)\]\((.*)\)/g;
+
+    
 
     let md_img_list = md_content.match(re_md_img);
+
+    console.log(md_img_list);
 
     let img_url_list = [];
 
     for (let i = 0, md_img_list_length = md_img_list.length; i < md_img_list_length; i++) {
 
-        img_url = md_img_list[i].match(/http(.*)(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)/)[0];
+        img_url = md_img_list[i].match(/(.*)\((.*)\)/)[2];
 
         img_url_list.push(img_url);
     }
@@ -125,28 +129,50 @@ function download_img_to_readme_dir(img_url, pre_image_url){
 
     return new Promise((resolve, reject)=>{
 
-        try {
+
+        // 如果以http开头,则进行下载
+        if(img_url.indexOf("http") === 0){
+            try {
+                let img_url_info = img_url.split(".")
+                img_url_info.reverse();
+                let ext = img_url_info[0];
+                let new_img_name = Date.now() + randomString(8) + "." + ext;
+                request.get(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+                    new_img_url = pre_image_url + new_img_name;
+    
+                    resolve(new_img_url);
+                });
+                
+    
+                
+        
+            }catch(e){
+    
+                console.log(e);
+                
+                new_img_url = img_url;
+    
+                resolve(new_img_url);
+            }
+
+        }
+        // 如果不以http开头,则是本地图片,进行拷贝即可
+        else {
+
             let img_url_info = img_url.split(".")
             img_url_info.reverse();
             let ext = img_url_info[0];
             let new_img_name = Date.now() + randomString(8) + "." + ext;
-            request.get(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+            fs.createReadStream(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
                 new_img_url = pre_image_url + new_img_name;
-
                 resolve(new_img_url);
             });
-            
 
-            
-    
-        }catch(e){
 
-            console.log(e);
-            
-            new_img_url = img_url;
 
-            resolve(new_img_url);
         }
+
+ 
 
 
 
