@@ -1,4 +1,20 @@
-# 将README.md中的图片替换为github地址的图片
+# 让Github的README.md完美显示大图
+
+
+
+##  先看转换前后的效果对比
+
+![before-txt](https://cdn.fangyuanxiaozhan.com/assets/1610328447414NikmjZck.gif)
+
+![after-txt](https://cdn.fangyuanxiaozhan.com/assets/1610328455184N10QWjb6.gif)
+
+
+
+
+
+
+
+
 
 本项目永久更新地址
 
@@ -351,8 +367,15 @@ git commit -m "新增README图片"
 git push
 ```
 
+## 最终效果对比
 
 
-##  替换后的效果: 所有大图正常显示!
+#### 图片替换前: 图片显示有好有坏,能否显示,全凭运气
 
-![bilibili-wallpaper-005](README.assets/bilibili-wallpaper-005.gif)
+
+![re-img-kk](https://raw.githubusercontent.com/zhaoolee/replace_readme_md_image/master/README/1610273620185zKKRYDmG.gif)
+
+
+#### 图片替换后: 所有大图正常显示!
+
+![bilibili-wallpaper-005](https://raw.githubusercontent.com/zhaoolee/replace_readme_md_image/master/README/16102767579577iDsT3A4.gif)
