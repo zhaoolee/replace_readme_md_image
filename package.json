@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js"
+    "start": "node main.js",
+    "build-win": "pkg ./main.js -t win -o ./dist/replace-readme-md-image-win.exe",
+    "build-linux": "pkg ./main.js -t linux -o ./dist/replace-readme-md-image-linux.sh",
+    "build-mac": "pkg ./main.js -t macos -o ./dist/replace-readme-md-image-mac.command",
+    "build": "npm run build-win && npm run build-linux && npm run build-mac"
   },
   "pkg": {
     "scripts": [
@@ -31,6 +35,7 @@
   "homepage": "https://github.com/zhaoolee/replace_readme_md_image#readme",
   "dependencies": {
     "fs-extra": "^9.0.1",
+    "moment": "^2.29.1",
     "pkg": "^4.4.9",
     "request": "^2.88.2"
   }

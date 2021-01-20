@@ -11,11 +11,6 @@
 
 
 
-
-
-
-
-
 本项目永久更新地址
 
 [https://github.com/zhaoolee/replace_readme_md_image](https://github.com/zhaoolee/replace_readme_md_image)
@@ -326,46 +321,12 @@ main();
 
 ## 如何使用本项目
 
+如果是Windows平台，将 `dist/replace-readme-md-image-win.exe` 放入项目根目录，双击运行即可；
 
-#### 如果是node.js项目
+如果是Mac平台，将  `dist/replace-readme-md-image-mac.command`  放入项目根目录，通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-mac.command && ./replace-readme-md-image-mac.command` 即可；
 
+如果是Linux平台，将  `dist/replace-readme-md-image-linux.sh` 放入项目根目录， 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-linux.sh && ./replace-readme-md-image-linux.sh` 即可；
 
-1. 将本项目根目录下main.js放入目标项目根目录,运行即可(如果报错依赖包缺失,记得npm i request fs-extra -D 补包)
-
-
-2. main.js程序运行完成后, 运行 
-
-```shell
-git add README
-git commit -m "新增README图片"
-git push
-```
-
-
-#### 如果是非node.js项目
-
-1. 下载本项目,并安装依赖包
-
-```
-git clone https://github.com/zhaoolee/replace_readme_md_image.git
-cd replace_readme_md_image
-npm i
-```
-
-2. 删除本项目下的 REAEME.md 文件和README文件夹和.git文件夹
-
-3. 将需要转换的README.md文案件和.git文件夹放入项目根目录, 如果REAMD.md中含本地相对路径的图片文件, 请手动调整路径
-
-4. 运行`npm start`, 生成新的README.md文件和README文件夹
-
-
-5. 将README.md文件和README文件夹放入原项目中, 原项目运行 
-
-```shell
-git add README
-git commit -m "新增README图片"
-git push
-```
 
 ## 最终效果对比
 

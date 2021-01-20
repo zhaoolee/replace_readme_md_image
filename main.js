@@ -1,6 +1,7 @@
 const request = require("request");
 const fs = require("fs-extra");
 const path = require("path");
+const moment  = require("moment");
 
 // 读取用户输入
 async function readline_sync() {
@@ -20,7 +21,7 @@ async function get_github_username_repositories_name() {
 
     // 查看.git文件夹是否存在
 
-    let exist = fs.existsSync(path.join(__dirname, ".git", "config"));
+    let exist = fs.existsSync(path.join("./", ".git", "config"));
 
     // 如果.git存在则读取username和repositories_name
 
@@ -31,7 +32,7 @@ async function get_github_username_repositories_name() {
     let url = "";
 
     if (exist) {
-        let config_content = String(fs.readFileSync(path.join(__dirname, ".git", "config")))
+        let config_content = String(fs.readFileSync(path.join("./", ".git", "config")))
 
         let re_n_t = /\n|\t/;
         let config_content_list = config_content.split(re_n_t)
@@ -137,7 +138,7 @@ function download_img_to_readme_dir(img_url, pre_image_url){
                 img_url_info.reverse();
                 let ext = img_url_info[0];
                 let new_img_name = Date.now() + randomString(8) + "." + ext;
-                request.get(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+                request.get(img_url).pipe(fs.createWriteStream(path.join("./", "README", new_img_name))).on("close", function(err){
                     new_img_url = pre_image_url + new_img_name;
     
                     resolve(new_img_url);
@@ -163,7 +164,7 @@ function download_img_to_readme_dir(img_url, pre_image_url){
             img_url_info.reverse();
             let ext = img_url_info[0];
             let new_img_name = Date.now() + randomString(8) + "." + ext;
-            fs.createReadStream(img_url).pipe(fs.createWriteStream(path.join(__dirname, "README", new_img_name))).on("close", function(err){
+            fs.createReadStream(img_url).pipe(fs.createWriteStream(path.join("./", "README", new_img_name))).on("close", function(err){
                 new_img_url = pre_image_url + new_img_name;
                 resolve(new_img_url);
             });
@@ -190,11 +191,11 @@ function replace_readme_info ( src_text, dest_text) {
     // 获取README.md原始信息
 
 
-    let readme_content = String(fs.readFileSync(path.join(__dirname, "README.md")));
+    let readme_content = String(fs.readFileSync(path.join("./", "README.md")));
 
     let  new_readme_content = readme_content.replace(src_text, dest_text);
 
-    fs.writeFileSync(path.join(__dirname, "README.md"), new_readme_content);
+    fs.writeFileSync(path.join("./", "README.md"), new_readme_content);
 
 
 }
@@ -202,6 +203,8 @@ function replace_readme_info ( src_text, dest_text) {
 
 
 async function main() {
+
+    console.log('process.cwd():' + process.cwd());
 
     // 获取仓库的用户名和仓库名
 
@@ -212,9 +215,14 @@ async function main() {
 
     console.log(username, repositories_name);
 
+    // 如果README_BEFORE.md已经存在则进行重命名
+    if(fs.existsSync(path.join("./", "README_BEFORE.md"))){
+        fs.copyFileSync(path.join("./", "README_BEFORE.md"), path.join("./", "README_BEFORE"+moment().format("YYYY-MM-DD-HH-mm-ss") +".md"))
+    }
+
     // 备份README.md为README_BEFORE.md
 
-    fs.copyFileSync(path.join(__dirname, "README.md"), path.join(__dirname, "README_BEFORE.md"))
+    fs.copyFileSync(path.join("./", "README.md"), path.join("./", "README_BEFORE.md"))
 
     // 拼接README图片前缀
 
@@ -222,11 +230,11 @@ async function main() {
 
     // 获取README.md里面的所有图片地址列表
 
-    let img_url_list = get_img_url_list_in_md(path.join(__dirname, "README.md"));
+    let img_url_list = get_img_url_list_in_md(path.join("./", "README.md"));
 
     // 如果README文件夹不存在，则创建README文件夹
-    if ((fs.existsSync(path.join(__dirname, "README"))) === false) {
-        fs.mkdirSync(path.join(__dirname, "README"))
+    if ((fs.existsSync(path.join("./", "README"))) === false) {
+        fs.mkdirSync(path.join("./", "README"))
     }
 
     for (let i = 0, img_url_list_length = img_url_list.length; i < img_url_list_length; i++) {
