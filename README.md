@@ -1,6 +1,6 @@
 # 让Github的README.md完美显示大图
 
-##  先看转换前后的效果对比
+## 先看转换前后的效果对比
 
 ![before-txt](https://raw.githubusercontent.com/zhaoolee/replace_readme_md_image/master/README/16103285371581AYcXCjy.gif)
 
@@ -9,6 +9,17 @@
 本项目永久更新地址
 
 [https://github.com/zhaoolee/replace_readme_md_image](https://github.com/zhaoolee/replace_readme_md_image)
+
+
+
+## 如何使用本项目?
+
+**Windows平台**，将dist文件夹下的 `replace-readme-md-image-win.exe` 放入项目根目录，双击运行`replace-readme-md-image-win.exe` ,即可；
+
+**Mac平台**，将dist文件夹下的`replace-readme-md-image-mac.command`  放入项目根目录，通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-mac.command && ./replace-readme-md-image-mac.command` ,即可；
+
+**Linux平台**，将dist文件夹下的 `replace-readme-md-image-linux.sh` 放入项目根目录， 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-linux.sh && ./replace-readme-md-image-linux.sh` ,即可；
+
 
 ##  痛点: Github的README.md展示图片效果并不完美
 
@@ -56,13 +67,6 @@ https://raw.githubusercontent.com/zhaoolee/EasyTypora/master/README/161021277652
 - 自动判断前缀, 对于已经转换的图片, 重复运行程序无需重新爬取,节约流量!
 
 
-## 如何使用本项目
-
-如果是Windows平台，将dist文件夹下的 `replace-readme-md-image-win.exe` 放入项目根目录，双击运行 ,即可；
-
-如果是Mac平台，将dist文件夹下的`replace-readme-md-image-mac.command`  放入项目根目录，通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-mac.command && ./replace-readme-md-image-mac.command` ,即可；
-
-如果是Linux平台，将dist文件夹下的 `replace-readme-md-image-linux.sh` 放入项目根目录， 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-linux.sh && ./replace-readme-md-image-linux.sh` ,即可；
 
 
 ## 最终效果对比
@@ -77,3 +81,5 @@ https://raw.githubusercontent.com/zhaoolee/EasyTypora/master/README/161021277652
 #### 图片替换后: 所有大图正常显示!
 
 ![bilibili-wallpaper-005](https://raw.githubusercontent.com/zhaoolee/replace_readme_md_image/master/README/16102767579577iDsT3A4.gif)
+
+
