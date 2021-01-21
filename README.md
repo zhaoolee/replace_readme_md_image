@@ -14,11 +14,15 @@
 
 ## 如何使用本项目?
 
-**Windows平台**，将dist文件夹下的 `replace-readme-md-image-win.exe` 放入项目根目录，双击运行`replace-readme-md-image-win.exe` ,即可；
+编译好的的软件包，请到本项目的dist目录下自取
 
-**Mac平台**，将dist文件夹下的`replace-readme-md-image-mac.command`  放入项目根目录，通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-mac.command && ./replace-readme-md-image-mac.command` ,即可；
+| 平台   |    使用方法   ｜
+| --- |  --- |
+| **Windows平台** | 1. 将 `replace-readme-md-image-win.exe` 放入项目根目录;<br/>2. 给`replace-readme-md-image-win.exe`右键,属性,勾选以管理员身份运行;<br/>3. 双击运行`replace-readme-md-image-win.exe` 即可;  |
+| **Mac平台**  | 1. 将`replace-readme-md-image-mac.command` 放入项目根目录; <br/>2. 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-mac.command`; <br/> 3. 在命令行运行`./replace-readme-md-image-mac.command` 即可; |
+|  **Linux平台**  | 1. 将`replace-readme-md-image-linux.sh` 放入项目根目录;<br/>2. 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-linux.sh`; <br/> 3.在命令行运行 `./replace-readme-md-image-linux.sh`即可 |
 
-**Linux平台**，将dist文件夹下的 `replace-readme-md-image-linux.sh` 放入项目根目录， 通过命令行进入项目，在命令行运行 `chmod 777 replace-readme-md-image-linux.sh && ./replace-readme-md-image-linux.sh` ,即可；
+
 
 
 ##  痛点: Github的README.md展示图片效果并不完美
